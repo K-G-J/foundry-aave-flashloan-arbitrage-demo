@@ -10,6 +10,7 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     //========== ERRORS ==========//
 
     error FlashLoan__invalidAmount();
+    error FlashLoan__invalidAddress();
     error FlashLoan__notOwner();
     error FlashLoan__transferFailed();
 
@@ -103,6 +104,10 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     }
 
     function withdraw(address _tokenAddress) external onlyOwner {
+        if (_tokenAddress == address(0)) {
+            revert FlashLoan__invalidAddress();
+        }
+
         IERC20 token = IERC20(_tokenAddress);
 
         emit Withdraw(_tokenAddress, token.balanceOf(address(this)));
