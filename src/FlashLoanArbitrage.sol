@@ -19,6 +19,7 @@ interface IDex {
 contract FlashLoanArbitrage is FlashLoanSimpleReceiverBase {
     //========== ERRORS ==========//
 
+    error FlashLoan__invalidAmount();
     error FlashLoan__notOwner();
     error FlashLoan__transferFailed();
 
@@ -69,6 +70,10 @@ contract FlashLoanArbitrage is FlashLoanSimpleReceiverBase {
      * @param _amount The amount of the flash-borrowed asset
      */
     function requestFlashLoan(address _token, uint256 _amount) public {
+        if (_amount <= 0) {
+            revert FlashLoan__invalidAmount();
+        }
+
         address receiverAddress = address(this);
         address asset = _token;
         uint256 amount = _amount;
